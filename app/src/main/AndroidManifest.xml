@@ -18,7 +18,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".TestActivity" />
+        <!--android:theme="@style/APPTheme"  防止黑屏白屏-->
+        <activity
+            android:theme="@style/APPTheme"
+            android:name=".TestActivity" />
         <activity android:name=".WebViewActivity" />
         <activity android:name=".url.URLActivity1"/>
         <activity android:name=".url.URLActivity2"/>
