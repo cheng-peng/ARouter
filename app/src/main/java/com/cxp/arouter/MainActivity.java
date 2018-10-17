@@ -1,14 +1,13 @@
 package com.cxp.arouter;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.Postcard;
 import com.alibaba.android.arouter.facade.annotation.Autowired;
@@ -24,11 +23,16 @@ public class MainActivity extends AppCompatActivity {
     @Autowired(name = "/service/hello1")
     IService service2;
 
+    private TextView mTv;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mTv=findViewById(R.id.main_tv);
+
+        ARouter.getInstance().inject(this);
     }
 
     public void clickLis(View view) {
@@ -121,15 +125,8 @@ public class MainActivity extends AppCompatActivity {
                 //.withTransition(int enterAnim, int exitAnim)
                 break;
             case R.id.main_bt5:
-                FragmentManager fm = getSupportFragmentManager();
-                //2.开启一个事务，通过调用beginTransaction方法开启。
-                FragmentTransaction ft =fm.beginTransaction();
-                //Fragment 跳转
-                Fragment fragment = (Fragment) ARouter.getInstance().build( "/cxp/TestFragment" ).navigation();
-                //向容器内加入Fragment，一般使用add或者replace方法实现，需要传入容器的id和Fragment的实例。
-                ft.add(R.id.main_fl,fragment);
-                //提交事务，调用commit方法提交。
-                ft.commit();
+                //发起路由跳转
+                ARouter.getInstance().build("/cxp/FragmentActivity").navigation();
                 break;
             case R.id.main_bt6:
                 //发起路由跳转
@@ -137,20 +134,27 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.main_bt7:
                 //暴露服务1
-                ARouter.getInstance().inject(this);
                 service.sayHello(this);
                 break;
             case R.id.main_bt8:
                 //暴露服务2
-                ARouter.getInstance().inject(this);
                 service2.sayHello(this);
                 break;
 
         }
 
-
-
-
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 1) {
+            if (requestCode == 100) {
+                String name = data.getStringExtra("name");
+                mTv.setText(name);
+            }
+        }
+    }
+
 
 }

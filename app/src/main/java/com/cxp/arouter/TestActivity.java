@@ -1,8 +1,10 @@
 package com.cxp.arouter;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
@@ -32,6 +34,7 @@ public class TestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_test);
 
+        //传参解析
         ARouter.getInstance().inject(this);
 
         tv=findViewById(R.id.test_tv);
@@ -46,9 +49,18 @@ public class TestActivity extends AppCompatActivity {
 
     }
 
+
     @Override
     public void finish() {
         super.finish();
         overridePendingTransition(0, R.anim.slide_down_out);
+    }
+
+    public void clickLis(View view) {
+        //数据是使用Intent返回
+        Intent intent = new Intent(); //把返回数据存入
+        intent.putExtra("name", "CXP"); //设置返回数据
+        setResult(1, intent);
+        finish();
     }
 }
